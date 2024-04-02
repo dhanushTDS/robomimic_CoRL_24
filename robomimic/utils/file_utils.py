@@ -19,6 +19,7 @@ import robomimic.utils.torch_utils as TorchUtils
 from robomimic.config import config_factory
 from robomimic.algo import algo_factory
 from robomimic.algo import RolloutPolicy
+# TODO(dhanush) : You also need to import an additional Rollout Policy that is specific for this project
 
 
 def create_hdf5_filter_key(hdf5_path, demo_keys, key_name):
@@ -415,6 +416,9 @@ def policy_from_checkpoint(device=None, ckpt_path=None, ckpt_dict=None, verbose=
         print("============= Loaded Policy =============")
         print(model)
     return model, ckpt_dict
+
+# TODO(dhanush) : Write an additional function which uses our custom Rollout Policy
+# THIS will be used only in the run_trained_agent derivatives that are specific to our project
 
 
 def env_from_checkpoint(ckpt_path=None, ckpt_dict=None, env_name=None, render=False, render_offscreen=False, verbose=False):

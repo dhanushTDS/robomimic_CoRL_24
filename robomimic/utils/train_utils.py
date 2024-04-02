@@ -222,6 +222,14 @@ def run_rollout(
     try:
         for step_i in range(horizon):
 
+            # NOTE(dhanush) : For the concatenation approach, we need to provide some sort of fake gaze,
+            # for the rollouts
+            # NOTE(dhanush) : These are the rollouts used in the default training and not used
+            # except in train.py
+            if 'human_gaze' in policy.__dict__['policy'].__dict__['obs_config']['planner']['modalities']['obs'][
+                'low_dim']:
+                ob_dict.update({'human_gaze': np.random.rand(2)})
+
             # get action from policy
             ac = policy(ob=ob_dict, goal=goal_dict)
 

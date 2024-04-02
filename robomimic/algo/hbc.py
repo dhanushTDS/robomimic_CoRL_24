@@ -318,6 +318,14 @@ class HBC(HierarchicalAlgo):
         self._subgoal_step_count += 1
         return action
 
+    # TODO(dhanush) : Write a separate function for getting action during rollout time
+    # Make sure this actually required, and if so note why !
+    # The only thing we need to change is the self.current_subgoal
+
+    # TODO(dhanush) : Write a separate function for getting subgoal proposals
+    # Use the planner "get_subgoal_predictions_LIRA"
+    # TODO(dhanush) : Figure out where exactly this will be used
+
     def reset(self):
         """
         Reset algo state to prepare for environment rollouts.

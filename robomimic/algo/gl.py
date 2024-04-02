@@ -470,6 +470,10 @@ class GL_VAE(GL):
         goals = self.sample_subgoals(obs_dict=obs_dict, goal_dict=goal_dict, num_samples=1)
         return { k : goals[k][:, 0, ...] for k in goals }
 
+    # TODO(dhanush) : Write a separate function that returns subgoal predictions with more than 1 samples
+    # TODO(dhanush) : In this function where we mention the number of samples is specified
+    # in the sample_subgoals function
+
     def sample_subgoals(self, obs_dict, goal_dict=None, num_samples=1):
         """
         Sample @num_samples subgoals from the VAE per observation.

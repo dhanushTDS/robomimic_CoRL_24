@@ -73,3 +73,4 @@ if __name__ == "__main__":
 
     # create 90-10 train-validation split in the dataset
     split_train_val_from_hdf5(hdf5_path=args.dataset, val_ratio=0.1)
+    # NOTE(dhanush) : You do not need an separate conversion script so this is fine

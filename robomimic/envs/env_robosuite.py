@@ -6,7 +6,7 @@ with metadata present in datasets.
 import json
 import numpy as np
 from copy import deepcopy
-
+# TODO(dhanush) : Make sure that Robosuite is being detected
 import robosuite
 import robosuite.utils.transform_utils as T
 try:
@@ -193,6 +193,9 @@ class EnvRobosuite(EB.EnvBase):
                 # render() returns a tuple when self.use_depth_obs=True
                 return im[0][::-1]
             return im[::-1]
+
+        # TODO(dhanush) : Add an additional mode called dual
+        # ------------------- # FILL HERE # ---------------- #
         else:
             raise NotImplementedError("mode={} is not implemented".format(mode))
 
@@ -317,6 +320,11 @@ class EnvRobosuite(EB.EnvBase):
 
         # Takes a point in world, transforms to camera frame, and then projects onto image plane.
         return K_exp @ T.pose_inv(R)
+
+    # NOTE(dhanush) : This additional function is used to project points from the Simulation World to
+    # the camera screen frame
+    # TODO(dhanush) : Actually verify if you need to copy it because most of the function here seemed to be in the
+    # camera_utils file that you create and actually use in the rollout
 
     def get_state(self):
         """
