@@ -194,8 +194,18 @@ class EnvRobosuite(EB.EnvBase):
                 return im[0][::-1]
             return im[::-1]
 
-        # TODO(dhanush) : Add an additional mode called dual
-        # ------------------- # FILL HERE # ---------------- #
+        # NOTE(dhanush) : Additional mode called dual - but causes choppy renders
+        # ----------------------------------- #
+        elif mode == "dual":
+            # NOTE(dhanush) : This is a shitty implementation to get simultaneous video / rendering feature
+            image = self.env.sim.render(height=height, width=width, camera_name=camera_name)
+
+            if self.use_depth_obs:
+                # render() returns a tuple when self.use_depth_obs=True
+                return image[0][::-1]
+            return image[::-1]
+        # ----------------------------------- #
+
         else:
             raise NotImplementedError("mode={} is not implemented".format(mode))
 

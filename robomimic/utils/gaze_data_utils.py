@@ -1,6 +1,6 @@
 import numpy
 import re
-# TODO (dhanush) : make sure that this always matches with what is in the Robosuite Side of stuff
+# NOTE (dhanush) : make sure that this always matches with what is in the Robosuite Side of stuff
 class gaze_data_util:
 
     def __init__(self, screen_horizontal, screen_vertical):
@@ -8,7 +8,7 @@ class gaze_data_util:
         self.height = screen_vertical
         self.width = screen_horizontal
 
-        #TODO: For now assuming that the pixels coordinates system is top left corner (0,0)
+        # NOTE(dhanush) : For now assuming that the pixels coordinates system is top left corner (0,0)
         # Need to write a transform function which aligns the coordiante system if not the same
 
 

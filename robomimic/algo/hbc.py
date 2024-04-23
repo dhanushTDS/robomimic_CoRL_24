@@ -318,13 +318,19 @@ class HBC(HierarchicalAlgo):
         self._subgoal_step_count += 1
         return action
 
-    # TODO(dhanush) : Write a separate function for getting action during rollout time
-    # Make sure this actually required, and if so note why !
-    # The only thing we need to change is the self.current_subgoal
+    # NOTE(dhanush) : Function used during rollout time, so it does not update the subgoal and we set it
+    # NOTE(dhanush) : Make sure this is only used when in run_trained_agent derivatives
+    def get_action_LIRA(self, obs_dict, goal_dict=None):
 
-    # TODO(dhanush) : Write a separate function for getting subgoal proposals
-    # Use the planner "get_subgoal_predictions_LIRA"
-    # TODO(dhanush) : Figure out where exactly this will be used
+        action = self.actor.get_action(obs_dict=obs_dict,
+                                       goal_dict=self.current_subgoal)
+
+        self._subgoal_step_count += 1
+
+        return action
+
+    # NOTE(dhanush) : Write a separate function for getting subgoal predictions -> to prevent bugs, doing the latter
+    # NOTE(dhanush) : This will be actually implemented on the planner side directly
 
     def reset(self):
         """

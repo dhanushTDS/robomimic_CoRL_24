@@ -215,6 +215,11 @@ class GL(PlannerAlgo):
         """
         return self.nets["goal_network"](obs=obs_dict, goal=goal_dict)
 
+    # NOTE(dhanush) : This is an extra function for getting subgoal predicitions during rollout time
+    def get_subgoal_predictions_planner(self, obs_dict, goal_dict=None, num_samples=1):
+
+        raise NotImplementedError
+
     def sample_subgoals(self, obs_dict, goal_dict=None, num_samples=1):
         """
         Sample @num_samples subgoals from the network per observation.
@@ -470,9 +475,32 @@ class GL_VAE(GL):
         goals = self.sample_subgoals(obs_dict=obs_dict, goal_dict=goal_dict, num_samples=1)
         return { k : goals[k][:, 0, ...] for k in goals }
 
-    # TODO(dhanush) : Write a separate function that returns subgoal predictions with more than 1 samples
-    # TODO(dhanush) : In this function where we mention the number of samples is specified
-    # in the sample_subgoals function
+    # NOTE(dhanush) : In this function where we mention the number of samples is specified
+    # NOTE(dhanush) : This function gives subgoal predictions on query
+    def get_subgoal_predictions_planner(self, obs_dict, goal_dict=None, num_samples=1):
+        """
+                Takes a batch of observations and predicts a batch of subgoals.
+
+                Args:
+                    obs_dict (dict): current observation
+                    goal_dict (dict): (optional) goal
+
+                Returns:
+                    subgoal prediction (dict): name -> Tensor [batch_size, ...]
+                """
+
+        if self.global_config.algo.latent_subgoal.enabled:
+            # latent subgoals from sampling prior
+            latent_subgoals = self.nets["goal_network"].sample_prior(
+                conditions=obs_dict,
+                goals=goal_dict,
+            )
+
+            return OrderedDict(latent_subgoal=latent_subgoals)
+
+        # Sample mutliple subgoals from the Planner
+        goals = self.sample_subgoals(obs_dict=obs_dict, goal_dict=goal_dict, num_samples=1)
+        return {k: goals[k][:, 0, ...] for k in goals}
 
     def sample_subgoals(self, obs_dict, goal_dict=None, num_samples=1):
         """

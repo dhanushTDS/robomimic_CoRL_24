@@ -541,8 +541,8 @@ class RolloutPolicy(object):
         ac = self.policy.get_action(obs_dict=ob, goal_dict=goal)
         return TensorUtils.to_numpy(ac[0])
 
-
-class RolloutPolicy_HBC(object):
+# NOTE(dhanush) : This is the Rollout Policy we are going to use for HBC implementation
+class RolloutPolicy_LIRA(object):
     """
     Wraps @Algo object to make it easy to run policies in a rollout loop.
     """
@@ -604,13 +604,38 @@ class RolloutPolicy_HBC(object):
         ob = self._prepare_observation(ob)
         if goal is not None:
             goal = self._prepare_observation(goal)
-        ac = self.policy.get_action(obs_dict=ob, goal_dict=goal)
-
-        # TODO(dhanush) : HERE INSTEAD OF get_action, you will have to replace it with get_action_rollout
-        # TODO(dhanush) : However, verify if this is actually required, and make a note on why it is different
+        # NOTE(dhanush) : THIS is specific to HBC algorithm
+        ac = self.policy.get_action_LIRA(obs_dict=ob, goal_dict=goal)
 
         return TensorUtils.to_numpy(ac[0])
 
-    # NOTE(dhanush) : Separate function for getting subgoal proposals
+    # NOTE(dhanush) : Separate function for getting subgoal proposals from the policy
+    def get_subgoal_proposals_LIRA(self, ob, goal=None):
 
-    # NOTE(dhanush) : Separate function for setting the subgoal proposals
+        ob = self._prepare_observation(ob)
+
+        if goal is not None:
+            goal = self._prepare_observation(goal)
+
+        # NOTE(dhanush) : This function will be specific to HBC Algorithm
+        # NOTE(dhanush) : Implemented the get_subgoal_proposals_planner in HBC - planner side - GL VAE side only
+        # NOTE(dhanush) : We will call policy.planner.get_subgoal_predictions_planner -> Strong assumption
+        # NOTE(dhanush) : By default we will get only 1 sample from the planner.
+        subgoal_proposals_from_policy = self.policy.planner.get_subgoal_predictions_planner(obs_dict=ob,
+                                                                                            goal_dict=None, num_samples=1)
+
+        return subgoal_proposals_from_policy
+
+    # NOTE(dhanush) : Separate function for setting the subgoal of the policy, relevant during rollout time
+    # TODO(dhanush) : Verify this works as inteded
+    def set_subgoal_LIRA(self, choosen_subgoal):
+
+        # Using the setter function of the current_subgoal
+        self.policy.current_subgoal = choosen_subgoal
+
+        return None
+
+
+
+
+
