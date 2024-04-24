@@ -622,7 +622,9 @@ class RolloutPolicy_LIRA(object):
         # NOTE(dhanush) : We will call policy.planner.get_subgoal_predictions_planner -> Strong assumption
         # NOTE(dhanush) : By default we will get only 1 sample from the planner.
         subgoal_proposals_from_policy = self.policy.planner.get_subgoal_predictions_planner(obs_dict=ob,
-                                                                                            goal_dict=None, num_samples=1)
+                                                                                            goal_dict=None, num_samples=100)
+
+        # NOTE(dhanush) : This is where you pass the number of subgoal samples to obtain
 
         return subgoal_proposals_from_policy
 

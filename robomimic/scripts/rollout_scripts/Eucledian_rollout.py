@@ -138,7 +138,7 @@ def rollout(policy, env, horizon, render=False, video_writer=None, video_skip=5,
             # NOTE(dhanush): (pixel_x:2100, pixel_y: 1350): corresponds to the green block - FAKE GAZE
             # NOTE(dhanush): (pixel_x:1775, pixel_y: 1350): corresponds to the red block - FAKE GAZE
 
-            gaze_data_dict = {'pixel_x': 1775, 'pixel_y': 1350}
+            gaze_data_dict = {'pixel_x': 2100, 'pixel_y': 1350}
             gaze_input = np.array([[gaze_data_dict['pixel_x'], gaze_data_dict[
                 'pixel_y']]])  # NOTE(dhanush) : CONVERTING INTO REQUIRED FORMAT FOR FUNCTIONS
 
@@ -161,7 +161,7 @@ def rollout(policy, env, horizon, render=False, video_writer=None, video_skip=5,
                     sg_proposals)  # NOTE(dhanush) : We extract the EE POS from the subgoal proposals
 
                 # NOTE(dhanush) Projecting the EEF POS onto {RENDER SCREEN} FRAME
-                pp_sgs = env.project_points_from_world_to_camera(world_points, camera_transformation_matrix, 2160,
+                pp_sgs = CameraUtils.project_points_from_world_to_camera(world_points, camera_transformation_matrix, 2160,
                                                                  3840)  # TODO: check screen dimensions
 
                 pp_sgs = pp_sgs[:, ::-1]  # NOTE(dhanush): ORDER REVERSAL TO GET IN EXPECTED FORMAT
@@ -178,7 +178,7 @@ def rollout(policy, env, horizon, render=False, video_writer=None, video_skip=5,
 
                 choosen_subgoal = choose_subgoal(sg_proposals,
                                                  subgoal_index_from_gaze)  # USING INDEX TO CHOOSE THE RESPECTIVE SUBGOAL
-
+                # NOTE(dhanush) : The choose_subgoal function fails when the number of available subgoals is 1
                 policy.set_subgoal_LIRA(choosen_subgoal)  # SETTING THE SUBGOAL
 
                 # TODO: wandb logging of gaze statistics
@@ -320,7 +320,7 @@ def run_trained_agent(args):
     device = TorchUtils.get_torch_device(try_to_use_cuda=True)
 
     # restore policy
-    policy, ckpt_dict = FileUtils.policy_from_checkpoint(ckpt_path=ckpt_path, device=device, verbose=True, HBC=True)
+    policy, ckpt_dict = FileUtils.policy_from_checkpoint_LIRA(ckpt_path=ckpt_path, device=device, verbose=True)
 
     # read rollout settings
     rollout_num_episodes = args.n_rollouts

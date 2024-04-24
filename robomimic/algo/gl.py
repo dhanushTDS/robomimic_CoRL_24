@@ -498,9 +498,10 @@ class GL_VAE(GL):
 
             return OrderedDict(latent_subgoal=latent_subgoals)
 
-        # Sample mutliple subgoals from the Planner
-        goals = self.sample_subgoals(obs_dict=obs_dict, goal_dict=goal_dict, num_samples=1)
-        return {k: goals[k][:, 0, ...] for k in goals}
+        # Sample multiple subgoals from the Planner
+        goals = self.sample_subgoals(obs_dict=obs_dict, goal_dict=goal_dict, num_samples=num_samples)  # num_samples passed here
+        # return {k: goals[k][:, 0, ...] for k in goals}  # NOTE(dhanush) : THis returns only the first goal
+        return {k: goals[k] for k in goals}  # Will return all the subgoals
 
     def sample_subgoals(self, obs_dict, goal_dict=None, num_samples=1):
         """
